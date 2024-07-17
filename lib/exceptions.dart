@@ -1,13 +1,19 @@
-class HideMeException {
-  final String message;
-  final StackTrace? stackTrace;
+import 'dart:developer';
 
-  HideMeException(this.message, [this.stackTrace]);
+class HideMeLogger {
+  static logMessage({required String message}) {
+    log("""
+        ~~~~~~~~~~~~MESSAGE~~~~~~~~~~~~~~~
+                 Message: $message 
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+""");
+  }
 
-  String get trace => stackTrace.toString();
-
-  @override
-  String toString() {
-    return message;
+  static logWithException({required String message, required Object e}) {
+    log("""
+       ======================ERROR===========================
+          Message: $message || Exception: ${e.toString()} 
+       ======================================================
+""");
   }
 }
