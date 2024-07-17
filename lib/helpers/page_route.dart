@@ -104,6 +104,7 @@ class _FadeInPageTransition extends StatelessWidget {
     //   opacity: _opacityAnimation,
     //   child: child,
     // );
+
     return ClipPath(
       clipper: ConcentricClipper(progress: _opacityAnimation.value),
       child: child,
