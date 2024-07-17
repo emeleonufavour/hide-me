@@ -13,7 +13,7 @@ final pages = [
           animate: true, repeat: true)),
   PageData(
       icon: Icons.format_size,
-      title: "See hidden info in pictures",
+      title: "See hidden texts in pictures",
       textColor: Colors.white,
       bgColor: const Color(0xFFFFA500),
       lottie: Lottie.asset("assets/lotties/reveal.json",
