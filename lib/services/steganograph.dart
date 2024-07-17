@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:hide_me/exceptions.dart';
+import 'package:hide_me/services/exceptions.dart';
 import 'package:hide_me/services/decryption.dart';
 import 'package:hide_me/services/encryption.dart';
 import 'package:image/image.dart';

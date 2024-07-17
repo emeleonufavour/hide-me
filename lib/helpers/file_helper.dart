@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:hide_me/exceptions.dart';
+import 'package:hide_me/services/exceptions.dart';
 import 'package:hide_me/helpers/img_helper.dart';
 
 class FileHelper {

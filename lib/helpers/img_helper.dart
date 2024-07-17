@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:hide_me/exceptions.dart';
+import 'package:hide_me/services/exceptions.dart';
 import 'package:image/image.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
