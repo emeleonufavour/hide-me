@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../helpers/page_route.dart';
 import '../../models/page_data.dart';
 import '../../widgets/page_view.dart';
+import '../home/home.dart';
 import '../route_example.dart';
 import 'pages.dart';
 import 'widget/onboarding_page.dart';
@@ -34,7 +35,7 @@ class OnboardingExample extends StatelessWidget {
         },
         onFinish: () {
           Navigator.push(context, ConcentricPageRoute(builder: (ctx) {
-            return const Page3();
+            return const MyHomePage();
           }));
         },
       ),
