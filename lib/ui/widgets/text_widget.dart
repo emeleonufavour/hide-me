@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class TextWidget extends StatelessWidget {
-  const TextWidget({
-    super.key,
-    required this.title,
-    this.style,
-    this.textColor,
-    this.fontWeight,
-    this.fontFamily,
-    this.fontSize,
-  });
+  const TextWidget(
+      {super.key,
+      required this.title,
+      this.style,
+      this.textColor,
+      this.fontWeight,
+      this.fontFamily,
+      this.fontSize,
+      this.textAlign});
 
   final String title;
   final TextStyle? style;
@@ -17,6 +17,7 @@ class TextWidget extends StatelessWidget {
   final FontWeight? fontWeight;
   final String? fontFamily;
   final double? fontSize;
+  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class TextWidget extends StatelessWidget {
             fontSize: fontSize ?? 15,
             height: 1.2,
           ),
-      textAlign: TextAlign.center,
+      textAlign: textAlign ?? TextAlign.center,
     );
   }
 }

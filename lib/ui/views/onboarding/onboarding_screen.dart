@@ -9,8 +9,8 @@ import '../route_example.dart';
 import 'pages.dart';
 import 'widget/onboarding_page.dart';
 
-class OnboardingExample extends StatelessWidget {
-  const OnboardingExample({super.key});
+class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
