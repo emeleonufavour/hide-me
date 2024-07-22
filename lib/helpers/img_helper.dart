@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -24,8 +25,9 @@ class ImageHelper {
 
   static Future<Image?> convertToPng(File img) async {
     String imgType = getImageType(img.path);
+    log("Image type => $imgType");
 
-    switch (imgType) {
+    switch (imgType.toLowerCase()) {
       case "png":
         return decodePng(await img.readAsBytes());
       case "jpg":
@@ -33,15 +35,14 @@ class ImageHelper {
         final Image? jpegImg = decodeJpg(await img.readAsBytes());
         final Size size = ImageSizeGetter.getSize(FileInput(img));
 
-        final newImg = Image.fromBytes(
-            width: size.width,
-            height: size.height,
-            bytes: jpegImg!.getBytes().buffer);
+        final newImg =
+            Image.fromBytes(size.width, size.height, jpegImg!.getBytes());
 
         final pngBytes = encodePng(newImg);
 
         return decodePng(pngBytes);
-      case "heic":
+      case "heif":
+        log("converting heic");
         final Image? heicImage = await decodeHeic(img);
         if (heicImage == null) {
           throw Exception("Failed to decode HEIC image.");
@@ -90,6 +91,8 @@ class ImageHelper {
           return 'jpg';
         case 'heic':
           return 'heic';
+        case 'heif':
+          return 'heif';
         default:
           return 'unknown';
       }

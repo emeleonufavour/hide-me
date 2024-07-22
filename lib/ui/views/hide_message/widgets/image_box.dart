@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,12 +7,10 @@ import 'package:flutter_svg/svg.dart';
 import '../../../widgets/text_widget.dart';
 
 class ImageBox extends StatefulWidget {
-  const ImageBox({
-    super.key,
-    this.fct,
-  });
+  const ImageBox({super.key, this.fct, this.image});
 
   final VoidCallback? fct;
+  final File? image;
 
   @override
   State<ImageBox> createState() => _HomeBoxState();
@@ -44,7 +44,7 @@ class _HomeBoxState extends State<ImageBox>
         HapticFeedback.lightImpact();
         Future.delayed(const Duration(milliseconds: 200), () {
           _controller.reverse();
-          // widget.fct!();
+          widget.fct!();
         });
       },
       child: ScaleTransition(
@@ -61,24 +61,32 @@ class _HomeBoxState extends State<ImageBox>
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/svg/upload.svg",
-                  color: Colors.white,
-                  height: 30,
-                  width: 30,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const TextWidget(
-                  title: "Tap to upload an image from gallery",
-                  textColor: Colors.white,
-                )
-              ],
-            ),
+            child: widget.image == null
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/upload.svg",
+                        color: Colors.white,
+                        height: 30,
+                        width: 30,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const TextWidget(
+                        title: "Tap to upload an image from gallery",
+                        textColor: Colors.white,
+                      )
+                    ],
+                  )
+                : Image.file(
+                    widget.image!,
+                    width: double.maxFinite,
+                    height: double.maxFinite,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.high,
+                  ),
           ),
         ),
       ),

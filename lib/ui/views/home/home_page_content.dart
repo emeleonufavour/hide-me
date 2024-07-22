@@ -20,7 +20,7 @@ List<Widget> homePageContent = [
   OpenContainer(
     transitionDuration: const Duration(milliseconds: 400),
     transitionType: ContainerTransitionType.fade,
-    openBuilder: (context, closedContainer) => const HideMessageScreen(),
+    openBuilder: (context, closedContainer) => HideMessageScreen(),
     openColor: const Color(0xff5c8afd),
     closedColor: const Color(0xff346dfd),
     closedShape: const RoundedRectangleBorder(
