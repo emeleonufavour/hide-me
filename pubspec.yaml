@@ -46,6 +46,7 @@ dependencies:
   animations: ^2.0.11
   image_picker: ^1.1.2
   gal: ^2.3.0
+  worker_manager: ^7.0.3
 
 dev_dependencies:
   flutter_test:

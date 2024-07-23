@@ -4,6 +4,7 @@ import 'ui/views/home/home.dart';
 import 'ui/views/onboarding/onboarding_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

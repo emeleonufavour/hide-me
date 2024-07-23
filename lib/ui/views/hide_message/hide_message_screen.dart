@@ -1,15 +1,12 @@
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:isolate';
-
 import 'package:flutter/material.dart';
-import 'package:hide_me/services/exceptions.dart';
 import 'package:hide_me/services/steganograph.dart';
 import 'package:hide_me/ui/views/hide_message/widgets/image_box.dart';
 import 'package:hide_me/ui/widgets/h_button.dart';
 import 'package:hide_me/ui/widgets/h_textfield.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:worker_manager/worker_manager.dart';
 
 class HideMessageScreen extends StatefulWidget {
   HideMessageScreen({super.key});
@@ -19,6 +16,7 @@ class HideMessageScreen extends StatefulWidget {
 }
 
 class _HideMessageScreenState extends State<HideMessageScreen> {
+  bool _loading = false;
   File? _selectedImageFile;
   final TextEditingController _secretTextCtr = TextEditingController();
   final TextEditingController _passwordCtr = TextEditingController();
@@ -44,13 +42,35 @@ class _HideMessageScreenState extends State<HideMessageScreen> {
         _secretTextCtr.text.isNotEmpty) {
       try {
         log("Encoding...");
+        setState(() {
+          _loading = true;
+        });
         if (_selectedImageFile != null) {
-          await Steganograph.encodeMessageWithIsolate(
-              _selectedImageFile!, _secretTextCtr.text, _passwordCtr.text);
+          Cancelable<File?> cancelable = workerManager.execute<File?>(
+            () async {
+              // Your CPU-intensive function here
+              await Steganograph.encodeMessage(
+                  _selectedImageFile!, _secretTextCtr.text, _passwordCtr.text);
+            },
+            priority: WorkPriority.immediately,
+          );
+          // File? result =
+          // if (result != null) {
+          //   log("Encoding successful: ${result.path}");
+          // } else {
+          //   log("Encoding failed");
+          // }
         }
 
+        setState(() {
+          _loading = false;
+        });
         log("Finished");
       } catch (e) {
+        setState(() {
+          _loading = false;
+        });
+        log("Error was encounteredd while encoding");
         log(e.toString());
       }
     } else {
@@ -108,6 +128,11 @@ class _HideMessageScreenState extends State<HideMessageScreen> {
                     ),
                     HButton(
                       label: "Encode",
+                      buttonWidget: _loading
+                          ? CircularProgressIndicator(
+                              color: Colors.white.withOpacity(0.5),
+                            )
+                          : null,
                       color: Colors.white.withOpacity(0.5),
                       fct: encodePhoto,
                     ),

@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:gal/gal.dart';
 import 'package:hide_me/services/exceptions.dart';
 import 'package:hide_me/services/decryption.dart';
@@ -18,7 +19,7 @@ import '../helpers/img_helper.dart';
 class Steganograph {
   static const String textDataKey = "hidden-message";
 
-  static Future<File?> _encodeMessage(
+  static Future<File?> encodeMessage(
       File image, String message, String password) async {
     try {
       final pngImage = await ImageHelper.convertToPng(image);
@@ -55,27 +56,37 @@ class Steganograph {
 
   static Future<File?> _encodeMessageInIsolate(
       File file, String message, String password) async {
-    return await _encodeMessage(file, message, password);
+    return await encodeMessage(file, message, password);
   }
 
   static _isolateEntryPoint(SendPort sendPort) async {
-    final port = ReceivePort();
-    sendPort.send(port.sendPort);
+    try {
+      RootIsolateToken rootToken = RootIsolateToken.instance!;
+      BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
+      final port = ReceivePort();
+      sendPort.send(port.sendPort);
 
-    await for (final msg in port) {
-      if (msg is List) {
-        final File file = msg[0];
-        final String message = msg[1];
-        final String password = msg[2];
-        final SendPort replyPort = msg[3];
+      await for (final msg in port) {
+        if (msg is List) {
+          final File file = msg[0];
+          final String message = msg[1];
+          final String password = msg[2];
+          final SendPort replyPort = msg[3];
 
-        try {
-          final result = await _encodeMessageInIsolate(file, message, password);
-          replyPort.send(result);
-        } catch (e) {
-          replyPort.send(null);
+          try {
+            final result =
+                await _encodeMessageInIsolate(file, message, password);
+            replyPort.send(result);
+          } catch (e) {
+            HideMeLogger.logWithException(
+                message: "Error encoding message in isolate", e: e);
+            replyPort.send(null);
+          }
         }
       }
+    } catch (e) {
+      HideMeLogger.logWithException(
+          message: "Error while running _isolateEntryPoint", e: e);
     }
   }
 
