@@ -54,9 +54,26 @@ class Steganograph {
     }
   }
 
-  static Future<File?> _encodeMessageInIsolate(
-      File file, String message, String password) async {
-    return await encodeMessage(file, message, password);
+  static File? encodeMessageSync(List<String> params) {
+    final Completer<File?> completer = Completer<File?>();
+    final imagePath = params[0];
+    final message = params[1];
+    final password = params[2];
+
+    final image = File(imagePath);
+
+    // Run async function and complete the completer
+    encodeMessage(image, message, password).then((file) {
+      completer.complete(file);
+    }).catchError((e) {
+      completer.completeError(e);
+    });
+
+    // Return synchronously
+    return completer.future.then((file) => file).catchError((e) {
+      HideMeLogger.logWithException(message: 'Error encoding message', e: e);
+      return null;
+    });
   }
 
   static _isolateEntryPoint(SendPort sendPort) async {
@@ -73,15 +90,15 @@ class Steganograph {
           final String password = msg[2];
           final SendPort replyPort = msg[3];
 
-          try {
-            final result =
-                await _encodeMessageInIsolate(file, message, password);
-            replyPort.send(result);
-          } catch (e) {
-            HideMeLogger.logWithException(
-                message: "Error encoding message in isolate", e: e);
-            replyPort.send(null);
-          }
+          // try {
+          //   final result =
+          //       await _encodeMessageInIsolate(file, message, password);
+          //   replyPort.send(result);
+          // } catch (e) {
+          //   HideMeLogger.logWithException(
+          //       message: "Error encoding message in isolate", e: e);
+          //   replyPort.send(null);
+          // }
         }
       }
     } catch (e) {

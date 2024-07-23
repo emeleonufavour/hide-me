@@ -1,12 +1,22 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hide_me/services/steganograph.dart';
 import 'package:hide_me/ui/views/hide_message/widgets/image_box.dart';
 import 'package:hide_me/ui/widgets/h_button.dart';
 import 'package:hide_me/ui/widgets/h_textfield.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:worker_manager/worker_manager.dart';
+
+File? encodeInIsolate(List<String> params) {
+  final String imagePath = params[0];
+  final String message = params[1];
+  final String password = params[2];
+
+  final image = File(imagePath);
+  return Steganograph.encodeMessageSync(params);
+}
 
 class HideMessageScreen extends StatefulWidget {
   HideMessageScreen({super.key});
@@ -46,14 +56,14 @@ class _HideMessageScreenState extends State<HideMessageScreen> {
           _loading = true;
         });
         if (_selectedImageFile != null) {
-          Cancelable<File?> cancelable = workerManager.execute<File?>(
-            () async {
-              // Your CPU-intensive function here
-              await Steganograph.encodeMessage(
-                  _selectedImageFile!, _secretTextCtr.text, _passwordCtr.text);
-            },
-            priority: WorkPriority.immediately,
-          );
+          // final result = await Steganograph.encodeMessage(
+          //     _selectedImageFile!, _secretTextCtr.text, _passwordCtr.text);
+          final result = await compute(encodeInIsolate, [
+            _selectedImageFile!.path,
+            _secretTextCtr.text,
+            _passwordCtr.text
+          ]);
+
           // File? result =
           // if (result != null) {
           //   log("Encoding successful: ${result.path}");
