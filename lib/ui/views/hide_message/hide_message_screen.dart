@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:hide_me/services/exceptions.dart';
@@ -43,13 +45,8 @@ class _HideMessageScreenState extends State<HideMessageScreen> {
       try {
         log("Encoding...");
         if (_selectedImageFile != null) {
-          // HideMeLogger.logMessage(
-          //     message: "Image Path: ${_selectedImageFile!.path}");
-          File? result = await Steganograph.encodeMessage(
+          await Steganograph.encodeMessageWithIsolate(
               _selectedImageFile!, _secretTextCtr.text, _passwordCtr.text);
-          setState(() {
-            _selectedImageFile = result;
-          });
         }
 
         log("Finished");

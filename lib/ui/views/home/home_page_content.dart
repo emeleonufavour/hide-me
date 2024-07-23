@@ -18,7 +18,7 @@ List<Widget> homePageContent = [
     ),
   ),
   OpenContainer(
-    transitionDuration: const Duration(milliseconds: 400),
+    transitionDuration: const Duration(milliseconds: 800),
     transitionType: ContainerTransitionType.fade,
     openBuilder: (context, closedContainer) => HideMessageScreen(),
     openColor: const Color(0xff5c8afd),
@@ -36,7 +36,7 @@ List<Widget> homePageContent = [
     height: 20,
   ),
   OpenContainer(
-    transitionDuration: const Duration(milliseconds: 400),
+    transitionDuration: const Duration(milliseconds: 800),
     transitionType: ContainerTransitionType.fade,
     openBuilder: (context, closedContainer) => const SeeMessageScreen(),
     openColor: const Color(0xfff45b56),

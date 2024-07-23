@@ -34,6 +34,7 @@ class OnboardingScreen extends StatelessWidget {
           );
         },
         onFinish: () {
+          log("finished");
           Navigator.push(context, ConcentricPageRoute(builder: (ctx) {
             return const MyHomePage();
           }));

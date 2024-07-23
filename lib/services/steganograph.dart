@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -16,7 +18,7 @@ import '../helpers/img_helper.dart';
 class Steganograph {
   static const String textDataKey = "hidden-message";
 
-  static Future<File?> encodeMessage(
+  static Future<File?> _encodeMessage(
       File image, String message, String password) async {
     try {
       final pngImage = await ImageHelper.convertToPng(image);
@@ -49,6 +51,51 @@ class Steganograph {
     } catch (e) {
       throw HideMeLogger.logWithException(message: message, e: e);
     }
+  }
+
+  static Future<File?> _encodeMessageInIsolate(
+      File file, String message, String password) async {
+    return await _encodeMessage(file, message, password);
+  }
+
+  static _isolateEntryPoint(SendPort sendPort) async {
+    final port = ReceivePort();
+    sendPort.send(port.sendPort);
+
+    await for (final msg in port) {
+      if (msg is List) {
+        final File file = msg[0];
+        final String message = msg[1];
+        final String password = msg[2];
+        final SendPort replyPort = msg[3];
+
+        try {
+          final result = await _encodeMessageInIsolate(file, message, password);
+          replyPort.send(result);
+        } catch (e) {
+          replyPort.send(null);
+        }
+      }
+    }
+  }
+
+  static Future<File?> encodeMessageWithIsolate(
+      File imageFile, String message, String password) async {
+    final completer = Completer<File?>();
+    final port = ReceivePort();
+
+    await Isolate.spawn(_isolateEntryPoint, port.sendPort);
+
+    final sendPort = await port.first as SendPort;
+    final responsePort = ReceivePort();
+
+    sendPort.send([imageFile, message, password, responsePort.sendPort]);
+
+    responsePort.listen((result) {
+      completer.complete(result as File?);
+    });
+
+    return completer.future;
   }
 
   static Future<String?> decodeMessage(
