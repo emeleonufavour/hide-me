@@ -1,6 +1,5 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hide_me/ui/views/hide_message/hide_message_screen.dart';
 import 'package:hide_me/ui/views/see_message/see_message_screen.dart';
 
@@ -18,7 +17,7 @@ List<Widget> homePageContent = [
     ),
   ),
   OpenContainer(
-    transitionDuration: const Duration(milliseconds: 800),
+    transitionDuration: const Duration(milliseconds: 1000),
     transitionType: ContainerTransitionType.fade,
     openBuilder: (context, closedContainer) => HideMessageScreen(),
     openColor: const Color(0xff5c8afd),

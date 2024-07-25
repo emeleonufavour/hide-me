@@ -54,27 +54,27 @@ class Steganograph {
     }
   }
 
-  static File? encodeMessageSync(List<String> params) {
-    final Completer<File?> completer = Completer<File?>();
-    final imagePath = params[0];
-    final message = params[1];
-    final password = params[2];
+  // static File? encodeMessageSync(List<String> params) {
+  //   final Completer<File?> completer = Completer<File?>();
+  //   final imagePath = params[0];
+  //   final message = params[1];
+  //   final password = params[2];
 
-    final image = File(imagePath);
+  //   final image = File(imagePath);
 
-    // Run async function and complete the completer
-    encodeMessage(image, message, password).then((file) {
-      completer.complete(file);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
+  //   // Run async function and complete the completer
+  //   encodeMessage(image, message, password).then((file) {
+  //     completer.complete(file);
+  //   }).catchError((e) {
+  //     completer.completeError(e);
+  //   });
 
-    // Return synchronously
-    return completer.future.then((file) => file).catchError((e) {
-      HideMeLogger.logWithException(message: 'Error encoding message', e: e);
-      return null;
-    });
-  }
+  //   // Return synchronously
+  //   return completer.future.then((file) => file).catchError((e) {
+  //     HideMeLogger.logWithException(message: 'Error encoding message', e: e);
+  //     return null;
+  //   });
+  // }
 
   static _isolateEntryPoint(SendPort sendPort) async {
     try {
