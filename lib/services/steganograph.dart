@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
@@ -27,6 +27,7 @@ class Steganograph {
 
       String encryptedMessage =
           await EncryptionService.getEncryptedMessage(message, password);
+      log("encrypted => $encryptedMessage");
 
       Image imageWithMessage = Image.fromBytes(
         size.width,
@@ -132,6 +133,7 @@ class Steganograph {
       final decodedImage = decodePng(await image.readAsBytes());
 
       String? hiddenMessage = decodedImage?.textData?[textDataKey];
+      log(decodedImage?.textData.toString() ?? "textdata is null");
 
       if (hiddenMessage != null && hiddenMessage.isNotEmpty) {
         return await DecryptionService.getDecryptedMessage(

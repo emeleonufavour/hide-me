@@ -9,15 +9,6 @@ import 'package:hide_me/ui/widgets/h_button.dart';
 import 'package:hide_me/ui/widgets/h_textfield.dart';
 import 'package:image_picker/image_picker.dart';
 
-// File? encodeInIsolate(List<String> params) {
-//   final String imagePath = params[0];
-//   final String message = params[1];
-//   final String password = params[2];
-
-//   final image = File(imagePath);
-//   return Steganograph.encodeMessageSync(params);
-// }
-
 class HideMessageScreen extends StatefulWidget {
   HideMessageScreen({super.key});
 
@@ -56,8 +47,8 @@ class _HideMessageScreenState extends State<HideMessageScreen> {
           _loading = true;
         });
         if (_selectedImageFile != null) {
-          final result = await Steganograph.encodeMessage(
-              _selectedImageFile!, _secretTextCtr.text, _passwordCtr.text);
+          final result = await Steganograph.encodeMessage(_selectedImageFile!,
+              _secretTextCtr.text, _passwordCtr.text.toLowerCase());
           // final result = await compute(encodeInIsolate, [
           //   _selectedImageFile!.path,
           //   _secretTextCtr.text,
